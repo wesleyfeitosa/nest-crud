@@ -7,28 +7,29 @@ import { User, UserDocument } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+  ) {}
 
-  create(createUserDto: CreateUserDto) {
-    const user = new this.userModel(createUserDto);
-    return user.save();
+  async create(createUserDto: CreateUserDto) {
+    return this.userModel.create(createUserDto);
   }
 
-  findAll() {
+  async findAll() {
     return this.userModel.find();
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     return this.userModel.findById(id);
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     return this.userModel.findByIdAndUpdate({ _id: id }, updateUserDto, {
       new: true,
     });
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     return this.userModel.deleteOne({ _id: id }).exec();
   }
 }
